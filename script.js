@@ -2,38 +2,42 @@ let homeScore = 0;
 let oppScore = 0;
 let teamFouls = 0;
 let oppFouls = 0;
-let clockInterval = null;
-let timeLeft = 1080; // 18 minutes
-let selectedEvent = null;
-let activePlayers = [];
 let playerStats = {};
-let selectedPlayers = [];
-let substitutionMode = false;
-let startersSelected = false;
-const MAX_FOULS = 5;
+let startersSet = false;
+let currentEvent = null;
+let onCourt = new Set();
+let selectingStarters = false;
+let selectingSubs = false;
+let gameInterval;
+let totalSeconds = 18 * 60;
+let lastPlayerInTime = {};
+let undoStack = [];
 
 const players = [
-  "Nicholas", "Micah", "Isaiah", "Ethan", "David",
-  "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick"
+  'Nicholas', 'Micah', 'Isaiah', 'Ethan', 'David',
+  'Ashton', 'Evan', 'Jackson', 'Josiah', 'Christopher', 'Kinnick'
 ];
 
-// Theme toggle
+players.forEach(name => {
+  playerStats[name] = { '2PT': 0, '3PT': 0, 'FT': 0, 'Foul': 0, minutes: 0 };
+});
+
 function toggleTheme() {
-  document.body.classList.toggle("theme-dark");
+  document.body.classList.toggle('dark-mode');
 }
 
-// Clock
 function updateClockDisplay() {
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  document.getElementById("gameClock").innerText = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  document.getElementById('gameClock').textContent =
+    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
 function startClock() {
-  if (clockInterval) return;
-  clockInterval = setInterval(() => {
-    if (timeLeft > 0) {
-      timeLeft--;
+  if (gameInterval) return;
+  gameInterval = setInterval(() => {
+    if (totalSeconds > 0) {
+      totalSeconds--;
       updateClockDisplay();
     } else {
       stopClock();
@@ -42,228 +46,203 @@ function startClock() {
 }
 
 function stopClock() {
-  clearInterval(clockInterval);
-  clockInterval = null;
+  clearInterval(gameInterval);
+  gameInterval = null;
 }
 
 function resetClock() {
-  timeLeft = 1080;
+  stopClock();
+  totalSeconds = 18 * 60;
   updateClockDisplay();
 }
 
-// Score and Event Handling
-function selectEvent(eventType) {
-  selectedEvent = eventType;
-  selectedPlayers = [];
-  substitutionMode = false;
-  showPlayerButtons();
-}
-
-function showPlayerButtons() {
-  const container = document.getElementById("playerButtons");
-  container.innerHTML = '';
-  players.forEach(player => {
-    if (startersSelected && !activePlayers.includes(player)) return;
-    const btn = document.createElement("button");
-    const fouls = (playerStats[player]?.Fouls || 0);
-    btn.innerText = `${player} (${fouls})`;
-    btn.onclick = () => handlePlayerEvent(player);
-    container.appendChild(btn);
-  });
-  document.getElementById("playerActionBtns").style.display = "block";
-}
-
-function handlePlayerEvent(player) {
-  if (!playerStats[player]) {
-    playerStats[player] = { '2PT': 0, '3PT': 0, 'FT': 0, 'Fouls': 0 };
-  }
-
-  const now = new Date().toLocaleTimeString();
-  if (selectedEvent === '2PT') {
-    playerStats[player]['2PT']++;
-    homeScore += 2;
-  } else if (selectedEvent === '3PT') {
-    playerStats[player]['3PT']++;
-    homeScore += 3;
-  } else if (selectedEvent === 'FT') {
-    playerStats[player]['FT']++;
-    homeScore += 1;
-  } else if (selectedEvent === 'Foul') {
-    playerStats[player]['Fouls']++;
-    teamFouls++;
-    if (playerStats[player]['Fouls'] === 4) {
-      alert(`${player} has 4 fouls!`);
-    }
-    if (playerStats[player]['Fouls'] === MAX_FOULS) {
-      alert(`${player} has fouled out!`);
-    }
-  }
-
-  updateScoreboard();
-  updateSummary();
-  logEvent(`${now} - ${player} ${selectedEvent}`);
-  cancelPlayerAction();
+function selectEvent(type) {
+  if (!startersSet) return alert("Set starters first!");
+  currentEvent = type;
+  renderPlayerButtons();
+  showActionButtons();
 }
 
 function logOpponentEvent(type) {
-  const now = new Date().toLocaleTimeString();
-  if (type === '2PT') oppScore += 2;
-  if (type === '3PT') oppScore += 3;
-  if (type === 'FT') oppScore += 1;
-  if (type === 'Foul') oppFouls++;
+  let points = (type === '2PT') ? 2 : (type === '3PT') ? 3 : (type === 'FT') ? 1 : 0;
+  if (type !== 'Foul') oppScore += points;
+  else {
+    oppFouls++;
+    checkBonus('opp');
+  }
   updateScoreboard();
-  logEvent(`${now} - Opponent ${type}`);
+  logPlay(`Opponent ${type}`);
 }
 
 function updateScoreboard() {
-  document.getElementById("homeScore").innerText = homeScore;
-  document.getElementById("oppScore").innerText = oppScore;
-  document.getElementById("teamFouls").innerText = teamFouls;
-  document.getElementById("oppFouls").innerText = oppFouls;
-  document.getElementById("bonusAlert").innerText = teamFouls >= 7 && teamFouls < 10 ? 'Bonus!' : teamFouls >= 10 ? 'Double Bonus!' : '';
-  document.getElementById("oppBonusAlert").innerText = oppFouls >= 7 && oppFouls < 10 ? 'Bonus!' : oppFouls >= 10 ? 'Double Bonus!' : '';
+  document.getElementById('homeScore').textContent = homeScore;
+  document.getElementById('oppScore').textContent = oppScore;
+  document.getElementById('teamFouls').textContent = teamFouls;
+  document.getElementById('oppFouls').textContent = oppFouls;
 }
 
-function logEvent(text) {
-  const log = document.getElementById("log");
-  const entry = document.createElement("li");
-  entry.innerText = text;
-  log.appendChild(entry);
-}
-
-function cancelPlayerAction() {
-  document.getElementById("playerButtons").innerHTML = '';
-  document.getElementById("playerActionBtns").style.display = "none";
-  selectedEvent = null;
-}
-
-// Set Starters and Substitution
-function setStarters() {
-  substitutionMode = false;
-  selectedPlayers = [];
-  const container = document.getElementById("playerButtons");
+function renderPlayerButtons(filter = () => true) {
+  const container = document.getElementById('playerButtons');
   container.innerHTML = '';
-  players.forEach(player => {
-    const btn = document.createElement("button");
-    btn.innerText = player;
-    btn.onclick = () => {
-      if (selectedPlayers.includes(player)) {
-        selectedPlayers = selectedPlayers.filter(p => p !== player);
-        btn.classList.remove('on-court');
-      } else {
-        if (selectedPlayers.length >= 5) {
-          alert("Only 5 players can be selected as starters.");
-          return;
-        }
-        selectedPlayers.push(player);
-        btn.classList.add('on-court');
-      }
-    };
+  players.filter(filter).forEach(name => {
+    const btn = document.createElement('button');
+    btn.textContent = `${name} (${playerStats[name].Foul})`;
+    btn.className = 'player-button';
+    if (selectingStarters && onCourt.has(name)) btn.classList.add('active');
+    if (selectingSubs) {
+      btn.classList.add(onCourt.has(name) ? 'sub-out' : 'sub-in');
+    }
+    btn.onclick = () => handlePlayerClick(name);
     container.appendChild(btn);
   });
-
-  const actionDiv = document.getElementById("playerActionBtns");
-  actionDiv.innerHTML = `
-    <button onclick="submitStarters()">Submit</button>
-    <button onclick="cancelPlayerAction()">Cancel</button>
-  `;
-  actionDiv.style.display = "block";
 }
 
-function submitStarters() {
-  if (selectedPlayers.length !== 5) {
-    alert("You must select 5 starters.");
-    return;
+function handlePlayerClick(name) {
+  if (selectingStarters) {
+    if (onCourt.has(name)) {
+      onCourt.delete(name);
+    } else {
+      if (onCourt.size >= 5) {
+        alert("Only 5 players allowed on court.");
+        return;
+      }
+      onCourt.add(name);
+      lastPlayerInTime[name] = totalSeconds;
+    }
+    renderPlayerButtons();
+  } else if (selectingSubs) {
+    if (onCourt.has(name)) {
+      onCourt.delete(name);
+    } else {
+      if (onCourt.size >= 5) {
+        alert("Only 5 players allowed on court.");
+        return;
+      }
+      onCourt.add(name);
+      lastPlayerInTime[name] = totalSeconds;
+    }
+    renderPlayerButtons();
+  } else if (currentEvent) {
+    if (!onCourt.has(name)) return;
+    playerStats[name][currentEvent]++;
+    if (currentEvent === '2PT') homeScore += 2;
+    if (currentEvent === '3PT') homeScore += 3;
+    if (currentEvent === 'FT') homeScore += 1;
+    if (currentEvent === 'Foul') {
+      teamFouls++;
+      if (playerStats[name].Foul === 4) alert(`${name} is one foul from fouling out!`);
+      if (playerStats[name].Foul === 5) alert(`${name} has fouled out!`);
+      checkBonus('home');
+    }
+    undoStack.push({ type: currentEvent, player: name });
+    updateScoreboard();
+    logPlay(`${name} ${currentEvent}`);
+    renderSummary();
+    clearPlayerButtons();
   }
-  activePlayers = [...selectedPlayers];
-  startersSelected = true;
-  selectedPlayers = [];
-  logEvent(`${new Date().toLocaleTimeString()} - Starters: ${activePlayers.join(', ')}`);
-  cancelPlayerAction();
+}
+
+function checkBonus(team) {
+  if (team === 'home') {
+    if (teamFouls === 7) document.getElementById('bonusAlert').textContent = ' (Bonus)';
+    if (teamFouls === 10) document.getElementById('bonusAlert').textContent = ' (Double Bonus)';
+  } else {
+    if (oppFouls === 7) document.getElementById('oppBonusAlert').textContent = ' (Bonus)';
+    if (oppFouls === 10) document.getElementById('oppBonusAlert').textContent = ' (Double Bonus)';
+  }
+}
+
+function setStarters() {
+  selectingStarters = true;
+  renderPlayerButtons();
+  showActionButtons();
 }
 
 function makeSubstitution() {
-  substitutionMode = true;
-  selectedPlayers = [];
-  const container = document.getElementById("playerButtons");
-  container.innerHTML = '';
-  players.forEach(player => {
-    const btn = document.createElement("button");
-    btn.innerText = player;
-    if (activePlayers.includes(player)) {
-      btn.classList.add('sub-out');
-    }
-    btn.onclick = () => {
-      if (selectedPlayers.includes(player)) {
-        selectedPlayers = selectedPlayers.filter(p => p !== player);
-        btn.classList.remove('sub-in', 'sub-out');
-      } else {
-        selectedPlayers.push(player);
-        btn.classList.add(activePlayers.includes(player) ? 'sub-out' : 'sub-in');
-      }
-    };
-    container.appendChild(btn);
-  });
-
-  const actionDiv = document.getElementById("playerActionBtns");
-  actionDiv.innerHTML = `
-    <button onclick="submitSubstitution()">Submit</button>
-    <button onclick="cancelPlayerAction()">Cancel</button>
-  `;
-  actionDiv.style.display = "block";
+  selectingSubs = true;
+  renderPlayerButtons();
+  showActionButtons();
 }
 
 function submitSubstitution() {
-  const newActive = [...activePlayers];
-  selectedPlayers.forEach(p => {
-    if (newActive.includes(p)) {
-      const index = newActive.indexOf(p);
-      if (index !== -1) newActive.splice(index, 1);
-    } else {
-      if (newActive.length < 5) {
-        newActive.push(p);
-      }
-    }
-  });
-  if (newActive.length !== 5) {
-    alert("You must have 5 players on the court.");
-    return;
-  }
-  activePlayers = [...newActive];
-  logEvent(`${new Date().toLocaleTimeString()} - Subbed to: ${activePlayers.join(', ')}`);
-  cancelPlayerAction();
+  selectingStarters = false;
+  selectingSubs = false;
+  logPlay(`Players on court: ${[...onCourt].join(', ')}`);
+  clearPlayerButtons();
+  hideActionButtons();
 }
 
-// Summary and Export
-function updateSummary() {
-  const tbody = document.getElementById("summaryBody");
+function cancelSelection() {
+  selectingStarters = false;
+  selectingSubs = false;
+  clearPlayerButtons();
+  hideActionButtons();
+}
+
+function clearPlayerButtons() {
+  document.getElementById('playerButtons').innerHTML = '';
+  currentEvent = null;
+}
+
+function showActionButtons() {
+  document.getElementById('submitSubBtn').style.display = 'inline-block';
+  document.getElementById('cancelBtn').style.display = 'inline-block';
+}
+
+function hideActionButtons() {
+  document.getElementById('submitSubBtn').style.display = 'none';
+  document.getElementById('cancelBtn').style.display = 'none';
+}
+
+function logPlay(text) {
+  const li = document.createElement('li');
+  const time = new Date().toLocaleTimeString();
+  li.textContent = `${time} - ${text}`;
+  document.getElementById('log').appendChild(li);
+}
+
+function renderSummary() {
+  const tbody = document.getElementById('summaryBody');
   tbody.innerHTML = '';
-  for (const player of players) {
-    const stats = playerStats[player] || { '2PT': 0, '3PT': 0, 'FT': 0, 'Fouls': 0 };
-    const row = document.createElement("tr");
-    const totalPoints = stats['2PT'] * 2 + stats['3PT'] * 3 + stats['FT'];
+  players.forEach(name => {
+    const row = document.createElement('tr');
+    const stats = playerStats[name];
+    const points = stats['2PT'] * 2 + stats['3PT'] * 3 + stats['FT'];
     row.innerHTML = `
-      <td>${player}</td>
+      <td>${name}</td>
       <td>${stats['2PT']}</td>
       <td>${stats['3PT']}</td>
       <td>${stats['FT']}</td>
-      <td>${stats['Fouls']}</td>
-      <td>${totalPoints}</td>
+      <td>${stats['Foul']}</td>
+      <td>${points}</td>
+      <td>${(stats.minutes / 60).toFixed(1)} min</td>
     `;
     tbody.appendChild(row);
-  }
+  });
 }
 
 function exportCSV() {
-  let csv = "Player,2PT,3PT,FT,Fouls,Total Points\n";
-  for (const player of players) {
-    const stats = playerStats[player] || { '2PT': 0, '3PT': 0, 'FT': 0, 'Fouls': 0 };
-    const totalPoints = stats['2PT'] * 2 + stats['3PT'] * 3 + stats['FT'];
-    csv += `${player},${stats['2PT']},${stats['3PT']},${stats['FT']},${stats['Fouls']},${totalPoints}\n`;
-  }
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "game_summary.csv";
+  let csv = 'Player,2PT,3PT,FT,Fouls,Total Points,Minutes\n';
+  players.forEach(name => {
+    const s = playerStats[name];
+    const total = s['2PT'] * 2 + s['3PT'] * 3 + s['FT'];
+    csv += `${name},${s['2PT']},${s['3PT']},${s['FT']},${s['Foul']},${total},${(s.minutes / 60).toFixed(1)}\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'game-stats.csv';
   link.click();
 }
+
+setInterval(() => {
+  if (!gameInterval) return;
+  const now = totalSeconds;
+  onCourt.forEach(name => {
+    const inTime = lastPlayerInTime[name] || now;
+    playerStats[name].minutes += 1;
+    lastPlayerInTime[name] = now;
+  });
+}, 1000);
