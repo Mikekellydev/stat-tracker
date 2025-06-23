@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Game Stat Tracker - PA HORNETS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
   <div class="theme-toggle">
@@ -17,10 +19,9 @@
     <h2>Game Stat Tracker - PA HORNETS</h2>
 
     <div class="scoreboard">
-      <h3>Scoreboard</h3>
-      <p>PA HORNETS: <span id="homeScore">0</span> | Opponent: <span id="oppScore">0</span></p>
-      <p>Team Fouls: <span id="teamFouls">0</span> <span id="bonusAlert"></span></p>
-      <p>Opponent Fouls: <span id="oppFouls">0</span> <span id="oppBonusAlert"></span></p>
+      <p>🏀 <strong>PA HORNETS:</strong> <span id="homeScore">0</span> | <strong>Opponent:</strong> <span id="oppScore">0</span></p>
+      <p>🔵 Team Fouls: <span id="teamFouls">0</span> <span id="bonusAlert"></span></p>
+      <p>🔴 Opponent Fouls: <span id="oppFouls">0</span> <span id="oppBonusAlert"></span></p>
     </div>
 
     <div class="clock-display">
@@ -31,41 +32,34 @@
     </div>
 
     <div class="stat-buttons">
-      <button onclick="selectEvent('2PT')"><i class="fas fa-basketball-ball"></i> 2PT</button>
-      <button onclick="selectEvent('3PT')"><i class="fas fa-basketball-ball"></i> 3PT</button>
-      <button onclick="selectEvent('FT')"><i class="fas fa-bullseye"></i> FT</button>
-      <button onclick="selectEvent('Foul')"><i class="fas fa-hand-paper"></i> Foul</button>
-      <button onclick="logOpponentEvent('2PT')"><i class="fas fa-basketball-ball"></i> OPP 2PT</button>
-      <button onclick="logOpponentEvent('3PT')"><i class="fas fa-basketball-ball"></i> OPP 3PT</button>
-      <button onclick="logOpponentEvent('FT')"><i class="fas fa-bullseye"></i> OPP FT</button>
-      <button onclick="logOpponentEvent('Foul')"><i class="fas fa-hand-paper"></i> OPP Foul</button>
+      <button onclick="selectEvent('2PT')">2PT</button>
+      <button onclick="selectEvent('3PT')">3PT</button>
+      <button onclick="selectEvent('FT')">FT</button>
+      <button onclick="selectEvent('Foul')">Foul</button>
+      <button onclick="logOpponentEvent('2PT')">OPP 2PT</button>
+      <button onclick="logOpponentEvent('3PT')">OPP 3PT</button>
+      <button onclick="logOpponentEvent('FT')">OPP FT</button>
+      <button onclick="logOpponentEvent('Foul')">OPP Foul</button>
     </div>
 
     <div class="substitution-buttons">
-      <button onclick="showStarterButtons()"><i class="fas fa-users"></i> Set Starters</button>
-      <button onclick="makeSubstitution()"><i class="fas fa-retweet"></i> Substitution</button>
-      <button onclick="submitSubstitution()" id="submitSubBtn" style="display:none;"><i class="fas fa-check"></i> Confirm Subs</button>
+      <button onclick="setStarters()">Set Starters</button>
+      <button onclick="makeSubstitution()">Substitution</button>
+      <button id="submitSubBtn" onclick="submitSubstitution()" style="display:none;">Confirm Subs</button>
     </div>
 
     <div class="player-buttons" id="playerButtons"></div>
 
     <div class="log">
-      <h3>Play Log</h3>
+      <h3>📜 Play Log</h3>
       <ul id="log"></ul>
     </div>
 
     <div class="summary">
-      <h3>Post-Game Summary</h3>
+      <h3>📈 Post-Game Summary</h3>
       <table id="summaryTable">
         <thead>
-          <tr>
-            <th>Player</th>
-            <th>2PT</th>
-            <th>3PT</th>
-            <th>FT</th>
-            <th>Fouls</th>
-            <th>Total Points</th>
-          </tr>
+          <tr><th>Player</th><th>2PT</th><th>3PT</th><th>FT</th><th>Fouls</th><th>Total Points</th></tr>
         </thead>
         <tbody id="summaryBody"></tbody>
       </table>
@@ -78,5 +72,12 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').then(reg => {
+        console.log('Service Worker registered.', reg);
+      });
+    }
+  </script>
 </body>
 </html>
