@@ -1,82 +1,95 @@
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #ffffff;
+  background-color: #f4f9ff;
   color: #111;
   margin: 0;
   padding: 20px;
 }
 
-body.dark-mode {
-  background-color: #121212;
-  color: #ffffff;
-}
-
 .container {
-  max-width: 800px;
-  margin: auto;
-}
-
-h2, h3 {
-  text-align: center;
-  color: royalblue;
-}
-
-.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .player-buttons, .log, .summary, .export-buttons {
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 8px;
-  background-color: #f0f4ff;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 button {
   margin: 5px;
-  padding: 10px 15px;
+  padding: 8px 14px;
   border: none;
-  background-color: royalblue;
+  border-radius: 4px;
+  background-color: #0055cc;
   color: white;
-  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #3b5dbf;
+  background-color: #003f99;
 }
 
-.player-buttons button.active {
-  background-color: seagreen;
+h2, h3 {
+  text-align: center;
+  color: #003f99;
+}
+
+.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .export-buttons {
+  text-align: center;
+  margin: 15px 0;
+}
+
+.player-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.player-buttons button {
+  background-color: #0074d9;
+  margin: 4px;
+  padding: 10px 14px;
+  border-radius: 6px;
 }
 
 .player-buttons button.on-court {
-  background-color: crimson;
+  background-color: #006400;
 }
 
-.dark-mode .scoreboard,
-.dark-mode .clock-display,
-.dark-mode .stat-buttons,
-.dark-mode .substitution-buttons,
-.dark-mode .player-buttons,
-.dark-mode .log,
-.dark-mode .summary,
-.dark-mode .export-buttons {
-  background-color: #1e1e1e;
+.player-buttons button.sub-out {
+  background-color: orange;
 }
 
-.dark-mode button {
-  background-color: #3366cc;
-  color: white;
+.player-buttons button.sub-in {
+  background-color: green;
 }
 
-table {
+#gameClock {
+  font-size: 2em;
+  font-weight: bold;
+  color: #222;
+  margin: 10px 0;
+}
+
+.theme-dark {
+  background-color: #1a1a1a;
+  color: #eee;
+}
+
+.theme-dark button {
+  background-color: #444;
+}
+
+.theme-dark h2, .theme-dark h3 {
+  color: #ddd;
+}
+
+#summaryTable {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-table, th, td {
+#summaryTable th, #summaryTable td {
+  padding: 8px;
   border: 1px solid #ccc;
   text-align: center;
-  padding: 8px;
-}
-
-.theme-toggle {
-  text-align: right;
 }
