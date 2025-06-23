@@ -2,95 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Game Stat Tracker - 14U</title>
-  <style>
-    body { font-family: sans-serif; margin: 20px; background: #f4f4f4; }
-    h2 { text-align: center; }
-    .container { max-width: 500px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px #ccc; }
-    select, button { width: 100%; padding: 10px; margin: 10px 0; }
-    .scoreboard { margin-top: 20px; font-size: 1.2em; text-align: center; }
-    .half-buttons, .stat-buttons { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-    .stat-buttons button { flex: 1; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Game Stat Tracker - PA HORNETS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="theme-toggle">
+    <button onclick="toggleTheme()">Toggle Light/Dark Mode</button>
+  </div>
+
   <div class="container">
-    <h2>Game Stat Tracker - 14U</h2>
-    <label for="player">Select Player</label>
-    <select id="player">
-      <option disabled selected value="">-- Select Player --</option>
-      <optgroup label="Home Team">
-        <option>Nicholas Adams</option>
-        <option>Micah Ali</option>
-        <option>Isaiah Anderson</option>
-        <option>Ethan Castro</option>
-        <option>David Crocker</option>
-        <option>Ashton Fass</option>
-        <option>Evan Gammill</option>
-        <option>Jackson Hoskins</option>
-        <option>Josiah Kelly</option>
-        <option>Christopher Orellana</option>
-        <option>Kinnick Virtue</option>
-      </optgroup>
-      <optgroup label="Opponent">
-        <option>Opponent Player 1</option>
-        <option>Opponent Player 2</option>
-        <option>Opponent Player 3</option>
-      </optgroup>
-    </select>
-
-    <label for="team">Team</label>
-    <select id="team">
-      <option value="Home">Home</option>
-      <option value="Opponent">Opponent</option>
-    </select>
-
-    <label for="half">Half</label>
-    <select id="half">
-      <option value="1st">1st Half</option>
-      <option value="2nd">2nd Half</option>
-    </select>
-
-    <div class="stat-buttons">
-      <button onclick="logStat(2)">+2PT</button>
-      <button onclick="logStat(3)">+3PT</button>
-      <button onclick="logStat(1)">+FT</button>
-      <button onclick="logStat(0, 'Foul')">Foul</button>
-      <button onclick="logStat(0, 'Timeout')">Timeout</button>
-    </div>
+    <h2>Game Stat Tracker - PA HORNETS</h2>
 
     <div class="scoreboard">
-      <p>Home Score: <span id="homeScore">0</span></p>
-      <p>Opponent Score: <span id="opponentScore">0</span></p>
+      <h3>Scoreboard</h3>
+      <p>PA HORNETS: <span id="homeScore">0</span> | Opponent: <span id="oppScore">0</span></p>
+      <p>Team Fouls: <span id="teamFouls">0</span> <span id="bonusAlert"></span></p>
+      <p>Opponent Fouls: <span id="oppFouls">0</span> <span id="oppBonusAlert"></span></p>
+    </div>
+
+    <div class="clock-display">
+      <button onclick="startClock()">Start</button>
+      <button onclick="stopClock()">Stop</button>
+      <button onclick="resetClock()">Reset</button>
+      <div id="gameClock">18:00</div>
+    </div>
+
+    <div class="stat-buttons">
+      <button onclick="selectEvent('2PT')"><i class="fas fa-basketball-ball"></i> 2PT</button>
+      <button onclick="selectEvent('3PT')"><i class="fas fa-basketball-ball"></i> 3PT</button>
+      <button onclick="selectEvent('FT')"><i class="fas fa-bullseye"></i> FT</button>
+      <button onclick="selectEvent('Foul')"><i class="fas fa-hand-paper"></i> Foul</button>
+      <button onclick="logOpponentEvent('2PT')"><i class="fas fa-basketball-ball"></i> OPP 2PT</button>
+      <button onclick="logOpponentEvent('3PT')"><i class="fas fa-basketball-ball"></i> OPP 3PT</button>
+      <button onclick="logOpponentEvent('FT')"><i class="fas fa-bullseye"></i> OPP FT</button>
+      <button onclick="logOpponentEvent('Foul')"><i class="fas fa-hand-paper"></i> OPP Foul</button>
+    </div>
+
+    <div class="substitution-buttons">
+      <button onclick="showStarterButtons()"><i class="fas fa-users"></i> Set Starters</button>
+      <button onclick="makeSubstitution()"><i class="fas fa-retweet"></i> Substitution</button>
+      <button onclick="submitSubstitution()" id="submitSubBtn" style="display:none;"><i class="fas fa-check"></i> Confirm Subs</button>
+    </div>
+
+    <div class="player-buttons" id="playerButtons"></div>
+
+    <div class="log">
+      <h3>Play Log</h3>
+      <ul id="log"></ul>
+    </div>
+
+    <div class="summary">
+      <h3>Post-Game Summary</h3>
+      <table id="summaryTable">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>2PT</th>
+            <th>3PT</th>
+            <th>FT</th>
+            <th>Fouls</th>
+            <th>Total Points</th>
+          </tr>
+        </thead>
+        <tbody id="summaryBody"></tbody>
+      </table>
+    </div>
+
+    <div class="export-buttons">
+      <button onclick="exportCSV()">Export CSV</button>
+      <button onclick="window.print()">Print PDF</button>
     </div>
   </div>
 
-  <script>
-    let homeScore = 0;
-    let opponentScore = 0;
-
-    function logStat(points, type = 'Stat') {
-      const player = document.getElementById('player').value;
-      const team = document.getElementById('team').value;
-
-      if (!player || !team) {
-        alert('Please select player and team.');
-        return;
-      }
-
-      if (type === 'Stat') {
-        if (team === 'Home') {
-          homeScore += points;
-          document.getElementById('homeScore').innerText = homeScore;
-        } else {
-          opponentScore += points;
-          document.getElementById('opponentScore').innerText = opponentScore;
-        }
-      } else {
-        alert(`${team} used ${type}`);
-      }
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,154 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #111;
+  transition: background 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background: #121212;
+  color: #f1f1f1;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h2, h3 {
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  margin-bottom: 10px;
+}
+
+.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .export-buttons, .log, .summary {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f0f4ff;
+  border: 1px solid #ccc;
+}
+
+.dark-mode .scoreboard,
+.dark-mode .clock-display,
+.dark-mode .stat-buttons,
+.dark-mode .substitution-buttons,
+.dark-mode .export-buttons,
+.dark-mode .log,
+.dark-mode .summary {
+  background-color: #1e1e2f;
+  border-color: #333;
+}
+
+.clock-display button,
+.stat-buttons button,
+.substitution-buttons button,
+.export-buttons button {
+  margin: 5px;
+  padding: 10px 15px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background-color: royalblue;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.clock-display button:hover,
+.stat-buttons button:hover,
+.substitution-buttons button:hover,
+.export-buttons button:hover {
+  background-color: #003bb3;
+}
+
+.player-buttons button {
+  margin: 4px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  border: 1px solid #aaa;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.player-buttons button:disabled {
+  background-color: #ccc;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.player-buttons button:hover:not(:disabled) {
+  background-color: #ddd;
+}
+
+.dark-mode .player-buttons button {
+  background-color: #333;
+  color: #fff;
+}
+
+ul#log {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 14px;
+}
+
+.summary table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.summary th,
+.summary td {
+  padding: 8px;
+  border: 1px solid #ccc;
+}
+
+.dark-mode .summary th,
+.dark-mode .summary td {
+  border-color: #555;
+}
+
+.theme-toggle {
+  text-align: center;
+  margin: 10px;
+}
+
+.theme-toggle button {
+  padding: 6px 12px;
+  border-radius: 5px;
+  background: #555;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.theme-toggle button:hover {
+  background: #333;
+}
+
+@media screen and (max-width: 600px) {
+  .stat-buttons button,
+  .substitution-buttons button,
+  .export-buttons button,
+  .clock-display button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+  }
+
+  .player-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .player-buttons button {
+    margin: 5px;
+    min-width: 100px;
+  }
+}
