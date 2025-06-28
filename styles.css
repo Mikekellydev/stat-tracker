@@ -101,7 +101,7 @@ button {
 }
 
 .dark-mode .player-btn.selected {
-  background-color: #66aaff;
+  background-color: #004aad;
   color: #ffffff;
   border: 2px solid #ffffff;
   font-weight: bold;
