@@ -1,14 +1,15 @@
 body {
   font-family: 'Poppins', sans-serif;
-  background: #f5f5f5;
-  color: #333;
+  margin: 0;
   padding: 20px;
+  background: #f0f4ff;
+  color: #333;
   transition: background 0.3s, color 0.3s;
 }
 
 .dark-mode {
-  background: #121212;
-  color: #eee;
+  background: #1e1e2f;
+  color: #f0f0f0;
 }
 
 .container {
@@ -20,87 +21,80 @@ h2, h3 {
   text-align: center;
 }
 
-.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .log, .summary {
+.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .player-buttons, .log, .summary, .export-buttons {
   margin: 20px 0;
+  text-align: center;
 }
 
 button {
+  font-family: 'Montserrat', sans-serif;
+  padding: 10px 16px;
   margin: 5px;
-  padding: 10px 15px;
-  font-size: 14px;
-  cursor: pointer;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
+  cursor: pointer;
   background-color: royalblue;
   color: white;
-  transition: background 0.3s ease;
+  font-weight: bold;
+  transition: background 0.2s;
 }
 
 button:hover {
   background-color: #003cb3;
 }
 
-.player-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
 .player-btn {
-  background-color: white;
-  color: black;
-  border: 2px solid royalblue;
-  border-radius: 5px;
-  padding: 10px;
-  min-width: 100px;
+  display: inline-block;
+  margin: 6px;
+  background: #0066cc;
+  color: #fff;
 }
 
 .player-btn.selected {
-  background-color: royalblue;
-  color: white;
+  background-color: #28a745;
+}
+
+.player-btn.sub-out.selected {
+  background-color: orange;
+}
+
+.player-btn.sub-in.selected {
+  background-color: green;
+}
+
+.submit-btn {
+  background: #28a745;
+}
+
+.cancel-btn {
+  background: #dc3545;
 }
 
 .dark-mode .player-btn {
-  background-color: #333;
+  background-color: #444;
   color: white;
 }
 
 .dark-mode .player-btn.selected {
-  background-color: #0074d9;
-  color: white;
-}
-
-.submit-btn, .cancel-btn {
-  background-color: green;
-  color: white;
-}
-
-.cancel-btn {
-  background-color: crimson;
+  background-color: #28a745;
 }
 
 #gameClock {
-  font-size: 24px;
-  text-align: center;
+  font-size: 2em;
   margin-top: 10px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
 table, th, td {
-  border: 1px solid #ccc;
+  border: 1px solid #aaa;
 }
 
 th, td {
   padding: 8px;
   text-align: center;
-}
-
-.dark-mode table, .dark-mode th, .dark-mode td {
-  border-color: #777;
 }
