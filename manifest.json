@@ -1,10 +1,10 @@
 {
-  "name": "Game Stat Tracker - PA HORNETS",
-  "short_name": "StatTracker",
+  "name": "Basketball Stat Tracker",
+  "short_name": "Stat Tracker",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0033cc",
+  "theme_color": "#0044cc",
   "icons": [
     {
       "src": "icons/icon-192.png",

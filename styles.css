@@ -1,66 +1,119 @@
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: #f4f8fc;
-  color: #222;
+  background-color: white;
+  color: #001f3f;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 800px;
   margin: auto;
-  padding: 1em;
-}
-
-button {
-  font-family: 'Poppins', sans-serif;
-  margin: 0.3em;
-  padding: 0.6em 1.2em;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: royalblue;
-  color: white;
-}
-
-button:hover {
-  background-color: #0052cc;
 }
 
 h2, h3 {
   text-align: center;
+  color: #001f3f;
 }
 
-.clock-display, .scoreboard, .summary, .log, .export-buttons {
-  margin-top: 1.5em;
-  text-align: center;
+.scoreboard, .clock-display, .log, .summary, .export-buttons {
+  margin-bottom: 20px;
+}
+
+.stat-buttons, .substitution-buttons, .export-buttons, .player-action-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+button {
+  font-size: 1rem;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #0074D9;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+.player-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 10px;
 }
 
 .player-button {
-  display: inline-block;
-  margin: 0.3em;
-  padding: 0.5em 1em;
-  background-color: #e0e0e0;
+  padding: 10px;
   border-radius: 6px;
+  background-color: #DDDDDD;
+  border: 1px solid #999;
   cursor: pointer;
 }
 
-.player-button.active { background-color: #2196F3; color: #fff; }
-.player-button.sub-in { background-color: green; color: white; }
-.player-button.sub-out { background-color: orange; color: white; }
-.player-button.disabled { opacity: 0.5; pointer-events: none; }
+.player-button.active {
+  background-color: #0074D9;
+  color: white;
+}
+
+.player-button.sub-out {
+  background-color: gold;
+}
+
+.player-button.sub-in {
+  background-color: limegreen;
+}
+
+#gameClock {
+  font-size: 2rem;
+  text-align: center;
+  margin: 10px 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #0074D9;
+  color: white;
+}
 
 .theme-toggle {
-  text-align: right;
-  margin: 1em;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
-.dark-mode {
-  background-color: #1e1e2f;
-  color: #f0f0f0;
+body.dark-mode {
+  background-color: #1c1c1c;
+  color: white;
 }
 
-.dark-mode button {
-  background-color: #333;
-  color: #f0f0f0;
+body.dark-mode th {
+  background-color: #444;
+}
+
+body.dark-mode button {
+  background-color: #004080;
+}
+
+body.dark-mode .player-button {
+  background-color: #555;
+  color: white;
 }
