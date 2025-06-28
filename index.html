@@ -42,6 +42,9 @@
 
     <div class="substitution-buttons">
       <button onclick="setStarters()">Set Starters</button>
+      <button onclick="initiateSubstitution()">Substitution</button>
+      <button id="submitSubBtn" onclick="submitSubstitution()" style="display:none;">Submit Subs</button>
+      <button id="cancelSubBtn" onclick="cancelSubstitution()" style="display:none;">Cancel</button>
     </div>
 
     <div class="player-buttons" id="playerButtons"></div>
@@ -67,6 +70,11 @@
         </thead>
         <tbody id="summaryBody"></tbody>
       </table>
+    </div>
+
+    <div class="export-buttons">
+      <button onclick="exportCSV()">Export CSV</button>
+      <button onclick="window.print()">Print PDF</button>
     </div>
   </div>
 
