@@ -4,33 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Game Stat Tracker - PA HORNETS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0044cc">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
   <div class="theme-toggle">
     <button onclick="toggleTheme()">Toggle Light/Dark Mode</button>
   </div>
-
   <div class="container">
     <h2>Game Stat Tracker - PA HORNETS</h2>
-
     <div class="scoreboard">
       <h3>Scoreboard</h3>
       <p>PA HORNETS: <span id="homeScore">0</span> | Opponent: <span id="oppScore">0</span></p>
       <p>Team Fouls: <span id="teamFouls">0</span> <span id="bonusAlert"></span></p>
       <p>Opponent Fouls: <span id="oppFouls">0</span> <span id="oppBonusAlert"></span></p>
     </div>
-
     <div class="clock-display">
       <button onclick="startClock()">Start</button>
       <button onclick="stopClock()">Stop</button>
       <button onclick="resetClock()">Reset</button>
       <div id="gameClock">18:00</div>
     </div>
-
     <div class="stat-buttons">
       <button onclick="selectEvent('2PT')">2PT</button>
       <button onclick="selectEvent('3PT')">3PT</button>
@@ -41,41 +35,38 @@
       <button onclick="logOpponentEvent('FT')">OPP FT</button>
       <button onclick="logOpponentEvent('Foul')">OPP Foul</button>
     </div>
-
     <div class="substitution-buttons">
       <button onclick="setStarters()">Set Starters</button>
       <button onclick="makeSubstitution()">Substitution</button>
       <button id="submitSubBtn" onclick="submitSubstitution()" style="display:none;">Confirm Subs</button>
     </div>
-
-    <div id="starterControls" class="player-action-controls" style="display:none;">
-      <button onclick="submitStarters()">Submit Starters</button>
-      <button onclick="cancelStarters()">Cancel</button>
-    </div>
-
     <div class="player-buttons" id="playerButtons"></div>
-
     <div class="log">
       <h3>Play Log</h3>
       <ul id="log"></ul>
     </div>
-
     <div class="summary">
       <h3>Post-Game Summary</h3>
       <table id="summaryTable">
         <thead>
-          <tr><th>Player</th><th>2PT</th><th>3PT</th><th>FT</th><th>Fouls</th><th>Total Points</th></tr>
+          <tr>
+            <th>Player</th>
+            <th>2PT</th>
+            <th>3PT</th>
+            <th>FT</th>
+            <th>Fouls</th>
+            <th>Total Points</th>
+            <th>Minutes</th>
+          </tr>
         </thead>
         <tbody id="summaryBody"></tbody>
       </table>
     </div>
-
     <div class="export-buttons">
       <button onclick="exportCSV()">Export CSV</button>
       <button onclick="window.print()">Print PDF</button>
     </div>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>

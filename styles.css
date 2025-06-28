@@ -1,69 +1,29 @@
 body {
-  font-family: 'Poppins', sans-serif;
-  background-color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  background: #ffffff;
   color: #000;
   margin: 0;
   padding: 0;
-  transition: background-color 0.3s, color 0.3s;
 }
 
-.dark-mode {
-  background-color: #121212;
-  color: #fff;
+body.dark-mode {
+  background: #121212;
+  color: #f5f5f5;
 }
 
 .container {
-  max-width: 900px;
-  margin: auto;
   padding: 20px;
+  max-width: 800px;
+  margin: auto;
 }
 
 h2, h3 {
   text-align: center;
-  font-family: 'Montserrat', sans-serif;
 }
 
-.scoreboard,
-.clock-display,
-.stat-buttons,
-.substitution-buttons,
-.log,
-.summary,
-.export-buttons {
-  margin: 20px 0;
+.clock-display {
   text-align: center;
-}
-
-button {
-  padding: 10px 15px;
-  margin: 5px;
-  border: none;
-  border-radius: 5px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.stat-buttons button,
-.substitution-buttons button,
-.export-buttons button {
-  background-color: #004aad;
-  color: white;
-}
-
-.stat-buttons button:hover,
-.substitution-buttons button:hover,
-.export-buttons button:hover {
-  background-color: #003080;
-}
-
-.clock-display button {
-  background-color: #0077cc;
-  color: white;
-}
-
-.clock-display button:hover {
-  background-color: #005fa3;
+  margin-bottom: 20px;
 }
 
 #gameClock {
@@ -71,86 +31,36 @@ button {
   margin-top: 10px;
 }
 
-.player-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin: 10px 0;
-}
-
-.player-btn {
+.stat-buttons button,
+.substitution-buttons button,
+.export-buttons button,
+.player-buttons button {
   margin: 5px;
   padding: 10px 15px;
-  border-radius: 5px;
-  background-color: #e0f0ff;
-  color: #004aad;
-  border: 1px solid #b3d9ff;
+  font-size: 16px;
+  cursor: pointer;
 }
 
 .player-btn.selected {
-  background-color: #004aad;
-  color: #fff;
-  font-weight: bold;
-  border: 2px solid #004aad;
+  background-color: royalblue;
+  color: white;
 }
 
-.dark-mode .player-btn {
-  background-color: #2a2a2a;
-  color: #99ccff;
-  border: 1px solid #3a3a3a;
+body.dark-mode .player-btn.selected {
+  background-color: lightblue;
+  color: black;
 }
 
-.dark-mode .player-btn.selected {
-  background-color: #004aad;
-  color: #ffffff;
-  border: 2px solid #ffffff;
-  font-weight: bold;
-}
-
-#log {
-  list-style-type: none;
-  padding: 0;
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
-}
-
-.dark-mode #log {
-  background-color: #1f1f1f;
-  border-color: #444;
-}
-
-#log li {
-  padding: 5px 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.dark-mode #log li {
-  border-bottom: 1px solid #444;
-}
-
-table {
+#summaryTable {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
-table, th, td {
-  border: 1px solid #ddd;
-}
-
-th, td {
+#summaryTable th, #summaryTable td {
+  border: 1px solid #ccc;
   padding: 8px;
   text-align: center;
-}
-
-.dark-mode table,
-.dark-mode th,
-.dark-mode td {
-  border: 1px solid #555;
-  background-color: #222;
-  color: #fff;
 }
 
 .theme-toggle {
