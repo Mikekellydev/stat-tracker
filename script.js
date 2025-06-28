@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   let homePlayers = [
     "Nicholas", "Micah", "Isaiah", "Ethan", "David",
-    "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick"
+    "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick, Nasib"
   ];
 
   let selectedStarters = [];
