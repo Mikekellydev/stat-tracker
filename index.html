@@ -4,22 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Game Stat Tracker - PA HORNETS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="theme-toggle">
     <button onclick="toggleTheme()">Toggle Light/Dark Mode</button>
   </div>
-
   <div class="container">
     <h2>Game Stat Tracker - PA HORNETS</h2>
 
     <div class="scoreboard">
       <h3>Scoreboard</h3>
       <p>PA HORNETS: <span id="homeScore">0</span> | Opponent: <span id="oppScore">0</span></p>
-      <p>Team Fouls: <span id="teamFouls">0</span></p>
-      <p>Opponent Fouls: <span id="oppFouls">0</span></p>
+      <p>Team Fouls: <span id="teamFouls">0</span> <span id="bonusAlert"></span></p>
+      <p>Opponent Fouls: <span id="oppFouls">0</span> <span id="oppBonusAlert"></span></p>
     </div>
 
     <div class="clock-display">
@@ -30,21 +30,19 @@
     </div>
 
     <div class="stat-buttons">
-      <button onclick="selectEvent('2PT')">2PT</button>
-      <button onclick="selectEvent('3PT')">3PT</button>
-      <button onclick="selectEvent('FT')">FT</button>
-      <button onclick="selectEvent('Foul')">Foul</button>
-      <button onclick="logOpponentEvent('2PT')">OPP 2PT</button>
-      <button onclick="logOpponentEvent('3PT')">OPP 3PT</button>
-      <button onclick="logOpponentEvent('FT')">OPP FT</button>
-      <button onclick="logOpponentEvent('Foul')">OPP Foul</button>
+      <button onclick="selectEvent('2PT')"><i class="fas fa-basketball-ball"></i> 2PT</button>
+      <button onclick="selectEvent('3PT')"><i class="fas fa-basketball-ball"></i> 3PT</button>
+      <button onclick="selectEvent('FT')"><i class="fas fa-bullseye"></i> FT</button>
+      <button onclick="selectEvent('Foul')"><i class="fas fa-hand-paper"></i> Foul</button>
+      <button onclick="logOpponentEvent('2PT')"><i class="fas fa-basketball-ball"></i> OPP 2PT</button>
+      <button onclick="logOpponentEvent('3PT')"><i class="fas fa-basketball-ball"></i> OPP 3PT</button>
+      <button onclick="logOpponentEvent('FT')"><i class="fas fa-bullseye"></i> OPP FT</button>
+      <button onclick="logOpponentEvent('Foul')"><i class="fas fa-hand-paper"></i> OPP Foul</button>
     </div>
 
     <div class="substitution-buttons">
-      <button onclick="setStarters()">Set Starters</button>
-      <button onclick="initiateSubstitution()">Substitution</button>
-      <button id="submitSubBtn" onclick="submitSubstitution()" style="display:none;">Submit Subs</button>
-      <button id="cancelSubBtn" onclick="cancelSubstitution()" style="display:none;">Cancel</button>
+      <button onclick="setStarters()"><i class="fas fa-users"></i> Set Starters</button>
+      <button onclick="makeSubstitution()"><i class="fas fa-retweet"></i> Substitution</button>
     </div>
 
     <div class="player-buttons" id="playerButtons"></div>
