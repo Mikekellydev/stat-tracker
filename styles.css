@@ -1,100 +1,132 @@
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
-  padding: 20px;
-  background: #f0f4ff;
-  color: #333;
+  padding: 0;
+  background: #ffffff;
+  color: #000000;
   transition: background 0.3s, color 0.3s;
 }
 
 .dark-mode {
-  background: #1e1e2f;
-  color: #f0f0f0;
+  background: #121212;
+  color: #ffffff;
 }
 
 .container {
-  max-width: 900px;
+  padding: 1rem;
+  max-width: 800px;
   margin: auto;
 }
 
-h2, h3 {
+h2 {
   text-align: center;
+  margin-bottom: 1rem;
 }
 
-.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .player-buttons, .log, .summary, .export-buttons {
-  margin: 20px 0;
-  text-align: center;
+.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .log, .summary, .export-buttons {
+  margin-bottom: 1rem;
 }
 
 button {
-  font-family: 'Montserrat', sans-serif;
-  padding: 10px 16px;
-  margin: 5px;
+  margin: 4px;
+  padding: 10px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: bold;
   background-color: royalblue;
   color: white;
-  font-weight: bold;
-  transition: background 0.2s;
+  transition: background 0.2s ease;
 }
 
 button:hover {
-  background-color: #003cb3;
+  background-color: #1d4ed8;
+}
+
+.player-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 1rem 0;
 }
 
 .player-btn {
-  display: inline-block;
-  margin: 6px;
-  background: #0066cc;
-  color: #fff;
+  background-color: white;
+  color: black;
+  border: 2px solid royalblue;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+.player-btn.active {
+  background-color: royalblue;
+  color: white;
 }
 
 .player-btn.selected {
-  background-color: #28a745;
-}
-
-.player-btn.sub-out.selected {
-  background-color: orange;
-}
-
-.player-btn.sub-in.selected {
   background-color: green;
+  color: white;
 }
 
-.submit-btn {
-  background: #28a745;
+.player-btn.onCourt {
+  background-color: yellow;
+  color: black;
 }
 
-.cancel-btn {
-  background: #dc3545;
+.player-btn.subIn {
+  background-color: darkgreen;
+  color: white;
 }
 
 .dark-mode .player-btn {
-  background-color: #444;
+  background-color: #333;
+  color: #fff;
+  border: 2px solid white;
+}
+
+.dark-mode .player-btn.active {
+  background-color: royalblue;
   color: white;
 }
 
 .dark-mode .player-btn.selected {
-  background-color: #28a745;
+  background-color: green;
+  color: white;
 }
 
-#gameClock {
-  font-size: 2em;
-  margin-top: 10px;
+.dark-mode .player-btn.onCourt {
+  background-color: yellow;
+  color: black;
+}
+
+.dark-mode .player-btn.subIn {
+  background-color: darkgreen;
+  color: white;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
-table, th, td {
-  border: 1px solid #aaa;
+thead {
+  background-color: #e2e8f0;
+}
+
+.dark-mode thead {
+  background-color: #2d3748;
+  color: #fff;
 }
 
 th, td {
   padding: 8px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+#gameClock {
+  font-size: 2rem;
+  margin-top: 10px;
+  font-weight: bold;
   text-align: center;
 }
