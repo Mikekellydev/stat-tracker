@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const homePlayers = [
     "Nicholas", "Micah", "Isaiah", "Ethan", "David",
-    "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick", "Nasib"
+    "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick", "Nasib", "Dylan"
   ];
 
   let onCourtPlayers = [];
