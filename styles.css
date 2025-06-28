@@ -1,119 +1,137 @@
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: white;
-  color: #001f3f;
   margin: 0;
   padding: 20px;
+  background-color: #f4faff;
+  color: #222;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #f4f4f4;
 }
 
 .container {
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
 }
 
 h2, h3 {
   text-align: center;
-  color: #001f3f;
+  font-family: 'Montserrat', sans-serif;
+  color: #004aad;
 }
 
-.scoreboard, .clock-display, .log, .summary, .export-buttons {
-  margin-bottom: 20px;
+.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .log, .summary, .export-buttons {
+  margin: 20px 0;
+  padding: 15px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.stat-buttons, .substitution-buttons, .export-buttons, .player-action-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  margin-bottom: 10px;
+.dark-mode .scoreboard,
+.dark-mode .clock-display,
+.dark-mode .stat-buttons,
+.dark-mode .substitution-buttons,
+.dark-mode .log,
+.dark-mode .summary,
+.dark-mode .export-buttons {
+  background: #1f1f1f;
 }
 
 button {
   font-size: 1rem;
-  padding: 10px 16px;
+  margin: 5px;
+  padding: 10px 15px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
+  background-color: #004aad;
+  color: #fff;
   cursor: pointer;
-  background-color: #0074D9;
-  color: white;
-  transition: background-color 0.2s;
+  transition: 0.2s;
 }
 
 button:hover {
-  background-color: #005fa3;
+  background-color: #005edc;
 }
 
-.player-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 15px;
-  gap: 10px;
+button:disabled {
+  background-color: gray;
+  cursor: not-allowed;
 }
 
-.player-button {
-  padding: 10px;
-  border-radius: 6px;
-  background-color: #DDDDDD;
-  border: 1px solid #999;
-  cursor: pointer;
+.player-btn {
+  background-color: #e0f0ff;
+  color: #004aad;
 }
 
-.player-button.active {
-  background-color: #0074D9;
-  color: white;
+.player-btn.selected {
+  background-color: #004aad;
+  color: #fff;
+  font-weight: bold;
+  border: 2px solid #004aad;
 }
 
-.player-button.sub-out {
-  background-color: gold;
+.dark-mode .player-btn {
+  background-color: #2a2a2a;
+  color: #99ccff;
 }
 
-.player-button.sub-in {
-  background-color: limegreen;
+.dark-mode .player-btn.selected {
+  background-color: #005edc;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.submit-btn {
+  background-color: #00b894;
+}
+
+.cancel-btn {
+  background-color: #d63031;
 }
 
 #gameClock {
   font-size: 2rem;
   text-align: center;
-  margin: 10px 0;
+  margin-top: 10px;
 }
 
-table {
+ul#log {
+  list-style-type: none;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+}
+
+ul#log li {
+  padding: 5px 0;
+  border-bottom: 1px dashed #ccc;
+  font-size: 0.95rem;
+}
+
+.summary table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-th, td {
-  border: 1px solid #ccc;
+.summary th, .summary td {
   padding: 8px;
+  border: 1px solid #ccc;
   text-align: center;
-}
-
-th {
-  background-color: #0074D9;
-  color: white;
+  font-size: 0.95rem;
 }
 
 .theme-toggle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  text-align: right;
+  margin-bottom: 10px;
 }
 
-body.dark-mode {
-  background-color: #1c1c1c;
-  color: white;
-}
-
-body.dark-mode th {
-  background-color: #444;
-}
-
-body.dark-mode button {
-  background-color: #004080;
-}
-
-body.dark-mode .player-button {
-  background-color: #555;
-  color: white;
+.export-buttons {
+  text-align: center;
 }
