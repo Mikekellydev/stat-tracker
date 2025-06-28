@@ -1,9 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let homePlayers = [
-    "Nicholas", "Micah", "Isaiah", "Ethan", "David",
-    "Ashton", "Evan", "Jackson", "Josiah", "Christopher", "Kinnick"
-  ];
-
+  
   let selectedStarters = [];
   let playersOnCourt = [];
   let playerStats = {};
@@ -13,6 +9,40 @@ document.addEventListener("DOMContentLoaded", () => {
   let gameClock = 18 * 60;
   let clockInterval = null;
   let playingTimeTrackers = {};
+
+// Season Tracker: Player Name Handling
+document.addEventListener("DOMContentLoaded", () => {
+  const playerForm = document.getElementById("playerForm");
+  const playerInput = document.getElementById("playerNameInput");
+  const playerList = document.getElementById("playerList");
+
+  // Load saved players
+  let savedPlayers = JSON.parse(localStorage.getItem("seasonPlayers")) || [];
+  renderPlayerList(savedPlayers);
+
+  playerForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = playerInput.value.trim();
+    if (name && !savedPlayers.includes(name)) {
+      savedPlayers.push(name);
+      localStorage.setItem("seasonPlayers", JSON.stringify(savedPlayers));
+      renderPlayerList(savedPlayers);
+      playerInput.value = "";
+    }
+  });
+
+  function renderPlayerList(players) {
+    playerList.innerHTML = "";
+    players.forEach(name => {
+      const li = document.createElement("li");
+      li.textContent = name;
+      playerList.appendChild(li);
+    });
+  }
+});
+  // End of Season Tracker: Player Name Handling
+  
+
 
   const playerButtonsDiv = document.getElementById("playerButtons");
   const log = document.getElementById("log");
