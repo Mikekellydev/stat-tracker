@@ -1,70 +1,90 @@
 body {
   font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  color: #000;
   margin: 0;
-  padding: 20px;
-  background-color: #f4faff;
-  color: #222;
+  padding: 0;
   transition: background-color 0.3s, color 0.3s;
 }
 
 .dark-mode {
   background-color: #121212;
-  color: #f4f4f4;
+  color: #fff;
 }
 
 .container {
   max-width: 900px;
   margin: auto;
+  padding: 20px;
 }
 
 h2, h3 {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  color: #004aad;
 }
 
-.scoreboard, .clock-display, .stat-buttons, .substitution-buttons, .log, .summary, .export-buttons {
+.scoreboard,
+.clock-display,
+.stat-buttons,
+.substitution-buttons,
+.log,
+.summary,
+.export-buttons {
   margin: 20px 0;
-  padding: 15px;
-  background: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
-}
-
-.dark-mode .scoreboard,
-.dark-mode .clock-display,
-.dark-mode .stat-buttons,
-.dark-mode .substitution-buttons,
-.dark-mode .log,
-.dark-mode .summary,
-.dark-mode .export-buttons {
-  background: #1f1f1f;
+  text-align: center;
 }
 
 button {
-  font-size: 1rem;
-  margin: 5px;
   padding: 10px 15px;
+  margin: 5px;
   border: none;
-  border-radius: 6px;
-  background-color: #004aad;
-  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background-color 0.3s;
 }
 
-button:hover {
-  background-color: #005edc;
+.stat-buttons button,
+.substitution-buttons button,
+.export-buttons button {
+  background-color: #004aad;
+  color: white;
 }
 
-button:disabled {
-  background-color: gray;
-  cursor: not-allowed;
+.stat-buttons button:hover,
+.substitution-buttons button:hover,
+.export-buttons button:hover {
+  background-color: #003080;
+}
+
+.clock-display button {
+  background-color: #0077cc;
+  color: white;
+}
+
+.clock-display button:hover {
+  background-color: #005fa3;
+}
+
+#gameClock {
+  font-size: 2em;
+  margin-top: 10px;
+}
+
+.player-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 10px 0;
 }
 
 .player-btn {
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 5px;
   background-color: #e0f0ff;
   color: #004aad;
+  border: 1px solid #b3d9ff;
 }
 
 .player-btn.selected {
@@ -77,61 +97,63 @@ button:disabled {
 .dark-mode .player-btn {
   background-color: #2a2a2a;
   color: #99ccff;
+  border: 1px solid #3a3a3a;
 }
 
 .dark-mode .player-btn.selected {
-  background-color: #005edc;
+  background-color: #66aaff;
   color: #ffffff;
+  border: 2px solid #ffffff;
   font-weight: bold;
 }
 
-.submit-btn {
-  background-color: #00b894;
-}
-
-.cancel-btn {
-  background-color: #d63031;
-}
-
-#gameClock {
-  font-size: 2rem;
-  text-align: center;
-  margin-top: 10px;
-}
-
-ul#log {
+#log {
   list-style-type: none;
   padding: 0;
   max-height: 200px;
   overflow-y: auto;
-  border-top: 1px solid #ccc;
-  margin-top: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
 }
 
-ul#log li {
-  padding: 5px 0;
-  border-bottom: 1px dashed #ccc;
-  font-size: 0.95rem;
+.dark-mode #log {
+  background-color: #1f1f1f;
+  border-color: #444;
 }
 
-.summary table {
+#log li {
+  padding: 5px 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.dark-mode #log li {
+  border-bottom: 1px solid #444;
+}
+
+table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-.summary th, .summary td {
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
   padding: 8px;
-  border: 1px solid #ccc;
   text-align: center;
-  font-size: 0.95rem;
+}
+
+.dark-mode table,
+.dark-mode th,
+.dark-mode td {
+  border: 1px solid #555;
+  background-color: #222;
+  color: #fff;
 }
 
 .theme-toggle {
   text-align: right;
-  margin-bottom: 10px;
-}
-
-.export-buttons {
-  text-align: center;
+  padding: 10px;
 }
