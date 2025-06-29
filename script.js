@@ -1,4 +1,4 @@
-let gameState = {
+document.addEventListener("DOMContentLoaded", () => {let gameState = {
   homeScore: 0,
   oppScore: 0,
   teamFouls: 0,
@@ -129,3 +129,4 @@ function makeSubstitution() {
 }
 
 updateUI();
+});
