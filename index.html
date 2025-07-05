@@ -2,58 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Game Stat Tracker - PA HORNETS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container">
     <h2>Game Stat Tracker - PA HORNETS</h2>
-    <div class="top-buttons">
-      <button onclick="saveGame()">💾 Save Game</button>
-      <button onclick="loadGame()">📂 Load Game</button>
-      <input type="file" id="fileInput" />
-    </div>
-    <div id="playerNameInput">
-      <h3>Add Player Names</h3>
-      <input type="text" id="playerNameField" placeholder="Enter player name" />
+
+    <div class="player-entry">
+      <input type="text" id="playerNameInput" placeholder="Enter Player Name" />
       <button onclick="addPlayer()">Add Player</button>
-      <ul id="playerList"></ul>
-      <button onclick="confirmPlayers()">Done</button>
     </div>
+
+    <div id="gameClock">
+      <span id="clock">18:00</span>
+      <button onclick="startClock()">Start</button>
+      <button onclick="stopClock()">Stop</button>
+      <button onclick="resetClock()">Reset</button>
+    </div>
+
     <div class="scoreboard">
       <p>PA HORNETS: <span id="homeScore">0</span> | Opponent: <span id="oppScore">0</span></p>
       <p>Team Fouls: <span id="teamFouls">0</span> | Opp Fouls: <span id="oppFouls">0</span></p>
     </div>
-    <div class="stat-buttons">
-      <button onclick="selectEvent('2PT')">2PT</button>
-      <button onclick="selectEvent('3PT')">3PT</button>
-      <button onclick="selectEvent('FT')">FT</button>
-      <button onclick="selectEvent('Foul')">Foul</button>
-      <button onclick="logOpponentEvent('2PT')">Opp 2PT</button>
-      <button onclick="logOpponentEvent('3PT')">Opp 3PT</button>
-      <button onclick="logOpponentEvent('FT')">Opp FT</button>
-      <button onclick="logOpponentEvent('Foul')">Opp Foul</button>
+
+    <div class="controls">
+      <button onclick="logEvent('2PT')">2PT</button>
+      <button onclick="logEvent('3PT')">3PT</button>
+      <button onclick="logEvent('FT')">FT</button>
+      <button onclick="logEvent('Foul')">Foul</button>
+      <button onclick="logOpponent('2PT')">Opp 2PT</button>
+      <button onclick="logOpponent('3PT')">Opp 3PT</button>
+      <button onclick="logOpponent('FT')">Opp FT</button>
+      <button onclick="logOpponent('Foul')">Opp Foul</button>
     </div>
-    <div class="substitution-buttons">
-      <button onclick="setStarters()">Set Starters</button>
-      <button onclick="makeSubstitution()">Substitution</button>
-    </div>
+
     <div id="playerButtons"></div>
-    <div class="log">
-      <h3>Play Log</h3>
-      <ul id="log"></ul>
-    </div>
-    <div class="summary">
-      <h3>Post-Game Summary</h3>
-      <table id="summaryTable">
-        <thead>
-          <tr><th>Player</th><th>2PT</th><th>3PT</th><th>FT</th><th>Fouls</th><th>Total Points</th><th>Minutes</th></tr>
-        </thead>
-        <tbody id="summaryBody"></tbody>
-      </table>
-    </div>
+
+    <h3>Play Log</h3>
+    <ul id="log"></ul>
   </div>
   <script src="script.js"></script>
 </body>
