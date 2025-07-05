@@ -1,51 +1,49 @@
 body {
   font-family: 'Poppins', sans-serif;
-  margin: 20px;
-  background-color: #f2f8ff;
+  background: #f0f4f8;
   color: #333;
+  margin: 0;
+  padding: 0;
 }
-
 .container {
-  max-width: 800px;
+  max-width: 960px;
   margin: auto;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  padding: 20px;
 }
-
 h2, h3 {
   text-align: center;
-  margin-bottom: 10px;
 }
-
 button {
-  margin: 4px;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: none;
-  border-radius: 4px;
-  background: royalblue;
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 1em;
+}
+input[type="text"] {
+  padding: 5px;
+  font-size: 1em;
+}
+.stat-buttons, .substitution-buttons, .top-buttons {
+  text-align: center;
+  margin-bottom: 20px;
+}
+#playerButtons button {
+  margin: 3px;
+  padding: 10px;
+}
+.selected {
+  background-color: #007bff;
   color: white;
-  cursor: pointer;
 }
-
-button:hover {
-  background: #003e9c;
+.log ul {
+  list-style-type: none;
+  padding-left: 0;
 }
-
-input[type="file"] {
-  margin: 8px 0;
-}
-
-table {
+.summary table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
 }
-
-th, td {
+.summary th, .summary td {
   border: 1px solid #ccc;
-  padding: 6px;
+  padding: 8px;
   text-align: center;
 }
