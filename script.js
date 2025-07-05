@@ -1,5 +1,4 @@
 let players = [];
-let starters = [];
 let homeScore = 0;
 let oppScore = 0;
 let teamFouls = 0;
@@ -53,7 +52,7 @@ function renderPlayerButtons() {
   players.forEach(name => {
     const btn = document.createElement("button");
     btn.textContent = name;
-    btn.onclick = () => logEvent("Player Selected: " + name);
+    btn.onclick = () => logEvent(`Action by ${name}`);
     container.appendChild(btn);
   });
 }
@@ -75,6 +74,8 @@ function logEvent(type) {
   } else if (type === "Foul") {
     teamFouls++;
     msg = "PA HORNETS committed a foul.";
+  } else {
+    msg = type; // fallback for player selection
   }
 
   document.getElementById("homeScore").textContent = homeScore;
