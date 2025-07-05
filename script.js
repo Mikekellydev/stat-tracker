@@ -1,244 +1,216 @@
 document.addEventListener("DOMContentLoaded", () => {
   let homePlayers = [];
+  let onCourtPlayers = [];
   let selectedStarters = [];
-  let onCourt = [];
-  let gameLog = [];
-  let gameClock = 1080; // 18 minutes in seconds
+  let isSelectingStarters = false;
+  let currentEvent = "";
+  let playerStats = {};
+  let gameClock = 18 * 60;
   let clockInterval = null;
-  let currentEvent = null;
 
-  const elements = {
-    playerList: document.getElementById("playerList"),
-    playerButtons: document.getElementById("playerButtons"),
-    log: document.getElementById("log"),
-    homeScore: document.getElementById("homeScore"),
-    oppScore: document.getElementById("oppScore"),
-    teamFouls: document.getElementById("teamFouls"),
-    oppFouls: document.getElementById("oppFouls"),
-    bonusAlert: document.getElementById("bonusAlert"),
-    oppBonusAlert: document.getElementById("oppBonusAlert"),
-    gameClock: document.getElementById("gameClock"),
-    summaryBody: document.getElementById("summaryBody")
-  };
+  const playerForm = document.getElementById("playerForm");
+  const playerInput = document.getElementById("playerInput");
+  const playerButtonsDiv = document.getElementById("playerButtons");
+  const log = document.getElementById("log");
+  const summaryBody = document.getElementById("summaryBody");
 
-  function renderPlayerList() {
-    elements.playerList.innerHTML = homePlayers.map(name => `<span>${name}</span>`).join(", ");
-  }
-
-  window.addPlayer = function () {
-    const input = document.getElementById("newPlayerName");
-    const name = input.value.trim();
-    if (name && !homePlayers.includes(name)) {
-      homePlayers.push(name);
-      renderPlayerList();
-      input.value = "";
-    }
-  };
-
-  window.confirmRoster = function () {
-    alert("Roster confirmed. Ready to set starters.");
-  };
-
-  function updateClockDisplay() {
-    const min = Math.floor(gameClock / 60).toString().padStart(2, "0");
-    const sec = (gameClock % 60).toString().padStart(2, "0");
-    elements.gameClock.textContent = `${min}:${sec}`;
-  }
-
-  window.startClock = function () {
+  // Clock controls
+  window.startClock = () => {
     if (!clockInterval) {
       clockInterval = setInterval(() => {
         if (gameClock > 0) {
           gameClock--;
           updateClockDisplay();
-        } else {
-          clearInterval(clockInterval);
         }
       }, 1000);
     }
   };
 
-  window.stopClock = function () {
-    clearInterval(clockInterval);
-    clockInterval = null;
-  };
-
-  window.resetClock = function () {
-    gameClock = 1080;
-    updateClockDisplay();
+  window.stopClock = () => clearInterval(clockInterval);
+  window.resetClock = () => {
     stopClock();
+    gameClock = 18 * 60;
+    updateClockDisplay();
   };
 
-  function renderPlayerButtons(context) {
-    elements.playerButtons.innerHTML = "";
-    const pool = context === "starters" ? homePlayers : onCourt;
-    pool.forEach(name => {
-      const btn = document.createElement("button");
-      btn.textContent = `${name}`;
-      btn.onclick = () => handlePlayerAction(name, context);
-      elements.playerButtons.appendChild(btn);
-    });
-
-    const submitBtn = document.createElement("button");
-    submitBtn.textContent = "Submit";
-    submitBtn.onclick = () => {
-      if (context === "starters" && selectedStarters.length === 5) {
-        onCourt = [...selectedStarters];
-        logEvent(`Starters set: ${onCourt.join(", ")}`);
-        elements.playerButtons.innerHTML = "";
-      } else if (context === "event") {
-        elements.playerButtons.innerHTML = "";
-      } else {
-        alert("Select 5 players.");
-      }
-    };
-    elements.playerButtons.appendChild(submitBtn);
-
-    const cancelBtn = document.createElement("button");
-    cancelBtn.textContent = "Cancel";
-    cancelBtn.onclick = () => {
-      selectedStarters = [];
-      currentEvent = null;
-      elements.playerButtons.innerHTML = "";
-    };
-    elements.playerButtons.appendChild(cancelBtn);
+  function updateClockDisplay() {
+    const minutes = Math.floor(gameClock / 60).toString().padStart(2, "0");
+    const seconds = (gameClock % 60).toString().padStart(2, "0");
+    document.getElementById("gameClock").textContent = `${minutes}:${seconds}`;
   }
 
-  function handlePlayerAction(name, context) {
+  function renderPlayerButtons(context = "") {
+    playerButtonsDiv.innerHTML = "";
+    homePlayers.forEach(player => {
+      const btn = document.createElement("button");
+      btn.textContent = `${player}${getFoulDisplay(player)}`;
+      btn.classList.add("player-btn");
+      if (onCourtPlayers.includes(player)) btn.classList.add("on-court");
+
+      btn.onclick = () => {
+        if (isSelectingStarters) {
+          toggleStarter(player);
+          renderPlayerButtons("starters");
+        } else if (currentEvent && onCourtPlayers.includes(player)) {
+          logPlayerEvent(player, currentEvent);
+          currentEvent = "";
+          playerButtonsDiv.innerHTML = "";
+        }
+      };
+
+      playerButtonsDiv.appendChild(btn);
+    });
+
     if (context === "starters") {
-      if (selectedStarters.includes(name)) {
-        selectedStarters = selectedStarters.filter(n => n !== name);
-      } else {
-        if (selectedStarters.length >= 5) {
-          alert("Only 5 starters allowed.");
+      const submitBtn = document.createElement("button");
+      submitBtn.textContent = "Submit Starters";
+      submitBtn.onclick = () => {
+        if (selectedStarters.length !== 5) {
+          alert("Select exactly 5 starters.");
           return;
         }
-        selectedStarters.push(name);
-      }
-    } else if (context === "event") {
-      logEvent(`${name} ${currentEvent}`);
-      updateScoreOrFoul(name, currentEvent);
-      updateSummary();
+        onCourtPlayers = [...selectedStarters];
+        selectedStarters.forEach(p => initStats(p));
+        logEvent(`Starters set: ${selectedStarters.join(", ")}`);
+        selectedStarters = [];
+        isSelectingStarters = false;
+        renderSummary();
+        playerButtonsDiv.innerHTML = "";
+      };
+
+      const cancelBtn = document.createElement("button");
+      cancelBtn.textContent = "Cancel";
+      cancelBtn.onclick = () => {
+        selectedStarters = [];
+        isSelectingStarters = false;
+        playerButtonsDiv.innerHTML = "";
+      };
+
+      playerButtonsDiv.appendChild(submitBtn);
+      playerButtonsDiv.appendChild(cancelBtn);
     }
   }
 
-  window.setStarters = function () {
-    selectedStarters = [];
-    renderPlayerButtons("starters");
+  function toggleStarter(player) {
+    if (selectedStarters.includes(player)) {
+      selectedStarters = selectedStarters.filter(p => p !== player);
+    } else if (selectedStarters.length < 5) {
+      selectedStarters.push(player);
+    } else {
+      alert("Only 5 players can be selected.");
+    }
+  }
+
+  function initStats(player) {
+    if (!playerStats[player]) {
+      playerStats[player] = { "2PT": 0, "3PT": 0, "FT": 0, Foul: 0, Minutes: 0 };
+    }
+  }
+
+  function getFoulDisplay(player) {
+    const fouls = playerStats[player]?.Foul || 0;
+    return fouls > 0 ? ` (${fouls})` : "";
+  }
+
+  function logPlayerEvent(player, type) {
+    initStats(player);
+    playerStats[player][type]++;
+    const points = type === "2PT" ? 2 : type === "3PT" ? 3 : type === "FT" ? 1 : 0;
+    if (points) {
+      document.getElementById("homeScore").textContent =
+        parseInt(document.getElementById("homeScore").textContent) + points;
+    }
+
+    if (type === "Foul") {
+      document.getElementById("teamFouls").textContent =
+        parseInt(document.getElementById("teamFouls").textContent) + 1;
+    }
+
+    checkBonus();
+    renderSummary();
+    logEvent(`${player} - ${type}`);
+  }
+
+  function checkBonus() {
+    const fouls = parseInt(document.getElementById("teamFouls").textContent);
+    const bonusText = document.getElementById("bonusAlert");
+    bonusText.textContent = fouls >= 10 ? " (Double Bonus)" : fouls >= 7 ? " (Bonus)" : "";
+  }
+
+  function logEvent(msg) {
+    const li = document.createElement("li");
+    const time = new Date().toLocaleTimeString();
+    li.textContent = `${time} - ${msg}`;
+    log.appendChild(li);
+  }
+
+  function renderSummary() {
+    summaryBody.innerHTML = "";
+    Object.keys(playerStats).forEach(player => {
+      const s = playerStats[player];
+      const total = s["2PT"] * 2 + s["3PT"] * 3 + s["FT"];
+      const row = `
+        <tr>
+          <td>${player}</td>
+          <td>${s["2PT"]}</td>
+          <td>${s["3PT"]}</td>
+          <td>${s["FT"]}</td>
+          <td>${s["Foul"]}</td>
+          <td>${total}</td>
+          <td>${formatMinutes(s.Minutes || 0)}</td>
+        </tr>
+      `;
+      summaryBody.insertAdjacentHTML("beforeend", row);
+    });
+  }
+
+  function formatMinutes(seconds) {
+    const min = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const sec = (seconds % 60).toString().padStart(2, "0");
+    return `${min}:${sec}`;
+  }
+
+  // Player form handler
+  playerForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const name = playerInput.value.trim();
+    if (name && !homePlayers.includes(name)) {
+      homePlayers.push(name);
+      playerInput.value = "";
+      renderPlayerButtons();
+    }
+  });
+
+  // Opponent event logging
+  window.logOpponentEvent = function (type) {
+    const points = type === "2PT" ? 2 : type === "3PT" ? 3 : type === "FT" ? 1 : 0;
+    if (points) {
+      document.getElementById("oppScore").textContent =
+        parseInt(document.getElementById("oppScore").textContent) + points;
+    }
+    if (type === "Foul") {
+      const oppFouls = document.getElementById("oppFouls");
+      let count = parseInt(oppFouls.textContent) + 1;
+      oppFouls.textContent = count;
+      const oppBonus = document.getElementById("bonusAlert");
+      oppBonus.textContent = count >= 10 ? " (Double Bonus)" : count >= 7 ? " (Bonus)" : "";
+    }
+    logEvent(`Opponent ${type}`);
   };
 
-  window.makeSubstitution = function () {
-    renderPlayerButtons("starters");
-  };
-
-  window.selectEvent = function (eventType) {
-    currentEvent = eventType;
+  // Event selector
+  window.selectEvent = function (type) {
+    currentEvent = type;
     renderPlayerButtons("event");
   };
 
-  function updateScoreOrFoul(player, type) {
-    if (!playerStats[player]) playerStats[player] = { "2PT": 0, "3PT": 0, "FT": 0, Fouls: 0 };
-
-    if (["2PT", "3PT", "FT"].includes(type)) {
-      playerStats[player][type]++;
-      let score = parseInt(elements.homeScore.textContent);
-      score += type === "2PT" ? 2 : type === "3PT" ? 3 : 1;
-      elements.homeScore.textContent = score;
-    } else if (type === "Foul") {
-      playerStats[player].Fouls++;
-      let fouls = parseInt(elements.teamFouls.textContent) + 1;
-      elements.teamFouls.textContent = fouls;
-      checkBonus(fouls, "team");
-    }
-  }
-
-  window.logOpponentEvent = function (type) {
-    logEvent(`Opponent ${type}`);
-    if (["2PT", "3PT", "FT"].includes(type)) {
-      let score = parseInt(elements.oppScore.textContent);
-      score += type === "2PT" ? 2 : type === "3PT" ? 3 : 1;
-      elements.oppScore.textContent = score;
-    } else if (type === "Foul") {
-      let fouls = parseInt(elements.oppFouls.textContent) + 1;
-      elements.oppFouls.textContent = fouls;
-      checkBonus(fouls, "opp");
-    }
+  window.setStarters = function () {
+    isSelectingStarters = true;
+    renderPlayerButtons("starters");
   };
 
-  function checkBonus(fouls, team) {
-    const alertBox = team === "team" ? elements.bonusAlert : elements.oppBonusAlert;
-    if (fouls === 7) {
-      alertBox.textContent = "Bonus!";
-    } else if (fouls === 10) {
-      alertBox.textContent = "Double Bonus!";
-    }
-  }
-
-  function logEvent(text) {
-    const li = document.createElement("li");
-    li.textContent = `${new Date().toLocaleTimeString()} - ${text}`;
-    elements.log.appendChild(li);
-  }
-
-  let playerStats = {};
-
-  function updateSummary() {
-    elements.summaryBody.innerHTML = "";
-    for (const player in playerStats) {
-      const stats = playerStats[player];
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${player}</td>
-        <td>${stats["2PT"]}</td>
-        <td>${stats["3PT"]}</td>
-        <td>${stats["FT"]}</td>
-        <td>${stats.Fouls}</td>
-        <td>${(2 * stats["2PT"]) + (3 * stats["3PT"]) + stats["FT"]}</td>
-        <td>–</td>
-      `;
-      elements.summaryBody.appendChild(row);
-    }
-  }
-
-  window.exportCSV = function () {
-    let csv = "Player,2PT,3PT,FT,Fouls,Total Points\n";
-    for (const player in playerStats) {
-      const s = playerStats[player];
-      const total = (2 * s["2PT"]) + (3 * s["3PT"]) + s["FT"];
-      csv += `${player},${s["2PT"]},${s["3PT"]},${s["FT"]},${s.Fouls},${total}\n`;
-    }
-    const blob = new Blob([csv], { type: "text/csv" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "game_stats.csv";
-    a.click();
-  };
-
-  window.saveGame = function () {
-    const data = {
-      playerStats,
-      gameLog,
-      score: {
-        home: elements.homeScore.textContent,
-        opp: elements.oppScore.textContent
-      },
-      fouls: {
-        team: elements.teamFouls.textContent,
-        opp: elements.oppFouls.textContent
-      }
-    };
-    localStorage.setItem("savedGame", JSON.stringify(data));
-    alert("Game saved.");
-  };
-
-  window.loadGame = function () {
-    const data = JSON.parse(localStorage.getItem("savedGame"));
-    if (!data) return alert("No saved game found.");
-    playerStats = data.playerStats;
-    elements.homeScore.textContent = data.score.home;
-    elements.oppScore.textContent = data.score.opp;
-    elements.teamFouls.textContent = data.fouls.team;
-    elements.oppFouls.textContent = data.fouls.opp;
-    updateSummary();
+  window.toggleTheme = function () {
+    document.body.classList.toggle("dark-mode");
+    if (isSelectingStarters) renderPlayerButtons("starters");
   };
 });
