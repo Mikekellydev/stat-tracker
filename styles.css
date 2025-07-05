@@ -1,49 +1,37 @@
 body {
-  font-family: 'Poppins', sans-serif;
-  background: #f0f4f8;
-  color: #333;
+  font-family: sans-serif;
+  background: #f4f4f4;
+  color: #222;
   margin: 0;
-  padding: 0;
-}
-.container {
-  max-width: 960px;
-  margin: auto;
   padding: 20px;
 }
-h2, h3 {
-  text-align: center;
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
 }
+
 button {
   margin: 5px;
-  padding: 10px 20px;
-  font-size: 1em;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
 }
-input[type="text"] {
-  padding: 5px;
-  font-size: 1em;
-}
-.stat-buttons, .substitution-buttons, .top-buttons {
-  text-align: center;
-  margin-bottom: 20px;
-}
-#playerButtons button {
-  margin: 3px;
-  padding: 10px;
-}
-.selected {
-  background-color: #007bff;
-  color: white;
-}
-.log ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-.summary table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.summary th, .summary td {
-  border: 1px solid #ccc;
+
+input {
   padding: 8px;
-  text-align: center;
+  margin-right: 10px;
+}
+
+#playerButtons button {
+  display: inline-block;
+  margin: 4px;
+  padding: 8px 10px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
